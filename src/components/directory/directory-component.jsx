@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MenuItem from "../menu-item/menu-item.component";
 import "./directory.styles.scss";
 const defaultSections = [
