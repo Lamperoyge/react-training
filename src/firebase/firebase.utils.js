@@ -3,7 +3,7 @@ import "firebase/firestore";
 import "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDpPBAkL6sd7ID-Wt8PXWZYt4T26-4D0Hs",
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: "reactzero-629ad.firebaseapp.com",
   databaseURL: "https://reactzero-629ad.firebaseio.com",
   projectId: "reactzero-629ad",
@@ -24,4 +24,27 @@ provider.setCustomParameters({ prompt: "select_account" });
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+  console.log(snapShot);
+  if (!snapShot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData,
+      });
+    } catch (error) {
+      console.log("error creating user", error.message);
+    }
+  }
+  return userRef;
+};
 export default firebase;
