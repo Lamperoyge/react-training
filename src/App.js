@@ -29,7 +29,6 @@ function App() {
       unsubscribeFromAuth();
     };
   }, []);
-  console.log(currentUser);
   return (
     <Fragment>
       <Header currentUser={currentUser} />
