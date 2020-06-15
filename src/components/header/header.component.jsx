@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 function Header({ currentUser, hidden }) {
-  console.log(currentUser);
   return (
     <div className="header">
       <Link to="/" className="logo-container">

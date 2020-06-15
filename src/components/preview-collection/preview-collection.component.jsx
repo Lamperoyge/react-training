@@ -9,7 +9,7 @@ const PreviewCollection = ({ title, items }) => {
         {items
           .filter((item, idx) => idx < 4)
           .map((item, idx) => {
-            return <CollectionItem item={item} id={idx} />;
+            return <CollectionItem item={item} key={idx} />;
           })}
       </div>
     </div>
