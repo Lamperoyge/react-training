@@ -5,12 +5,17 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import ShopPage from "./pages/shop/shop.component";
 import Header from "./components/header/header.component";
 import SignInSignUp from "./pages/auth/sign-in-sign-up.component";
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments,
+} from "./firebase/firebase.utils";
 import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user.action";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 import { createStructuredSelector } from "reselect";
 import CheckoutPage from "./pages/checkout/checkout.component";
+import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 function App(props) {
   let unsubscribeFromAuth = null;
 
@@ -27,6 +32,11 @@ function App(props) {
         });
       }
       props.setCurrentUser(userAuth);
+      //it's done so that we can add data to our store
+      // addCollectionAndDocuments(
+      //   "collections",
+      //   props.collectionsArray.map(({ title, items }) => ({ title, items }))
+      // );
     });
     return function cleanup() {
       unsubscribeFromAuth();
@@ -53,6 +63,7 @@ function App(props) {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  collectionsArray: selectCollectionsForPreview,
 });
 const mapDispatchToProps = (dispatch) => {
   return {
