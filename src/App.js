@@ -11,7 +11,7 @@ import {
   addCollectionAndDocuments,
 } from "./firebase/firebase.utils";
 import { connect } from "react-redux";
-import { setCurrentUser } from "./redux/user/user.action";
+import { setCurrentUser, checkUserSession } from "./redux/user/user.action";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 import { createStructuredSelector } from "reselect";
 import CheckoutPage from "./pages/checkout/checkout.component";
@@ -19,28 +19,33 @@ import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 function App(props) {
   let unsubscribeFromAuth = null;
 
-  useEffect(() => {
-    unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
+  // useEffect(() => {
+  //   unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+  //     if (userAuth) {
+  //       const userRef = await createUserProfileDocument(userAuth);
 
-        userRef.onSnapshot((snapshot) => {
-          props.setCurrentUser({
-            id: snapshot.id,
-            ...snapshot.data(),
-          });
-        });
-      }
-      props.setCurrentUser(userAuth);
-      //it's done so that we can add data to our store
-      // addCollectionAndDocuments(
-      //   "collections",
-      //   props.collectionsArray.map(({ title, items }) => ({ title, items }))
-      // );
-    });
-    return function cleanup() {
-      unsubscribeFromAuth();
-    };
+  //       userRef.onSnapshot((snapshot) => {
+  //         props.setCurrentUser({
+  //           id: snapshot.id,
+  //           ...snapshot.data(),
+  //         });
+  //       });
+  //     }
+  //     props.setCurrentUser(userAuth);
+  //     //it's done so that we can add data to our store
+  //     // addCollectionAndDocuments(
+  //     //   "collections",
+  //     //   props.collectionsArray.map(({ title, items }) => ({ title, items }))
+  //     // );
+  //   });
+  //   return function cleanup() {
+  //     unsubscribeFromAuth();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const { checkUserSession } = props;
+    checkUserSession();
   }, []);
   return (
     <Fragment>
@@ -68,6 +73,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentUser: (user) => dispatch(setCurrentUser(user)),
+    checkUserSession: () => dispatch(checkUserSession()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(App);
